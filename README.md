@@ -1,5 +1,5 @@
 # MocaScraper
-![image](https://github.com/HilmiStd/MocaScraper/assets/147703897/a5f4206b-0db2-4f7b-8207-7bf209d4b420)
+![image](https://github.com/HilmiStd/MocaScraper/assets/147703897/4e0a72a1-563e-40d9-9e8f-e82db19a8d67)
 MocaScraper adalah sebuah aplikasi terminal yang digunakan untuk melakukan scraping proses presensi dari web elearning moca. Pastikan untuk menggunakan dengan bijak dan tidak melakukan spam.
 
 ## Instalasi
@@ -22,7 +22,7 @@ MocaScraper adalah sebuah aplikasi terminal yang digunakan untuk melakukan scrap
     ```
 
 4. Isi file `config.json` dengan informasi yang sesuai. Untuk `course_id` bisa didapatkan dari link course di moca dan pastikan sudah enroll course tersebut. </br>
-![image](https://github.com/HilmiStd/MocaScraper/assets/147703897/70514c06-fa9f-427a-a278-891f7a0eda2f)
+![image](https://github.com/HilmiStd/MocaScraper/assets/147703897/5535c292-7788-4b40-a376-cff10cea182b)
 
 ## Cara Penggunaan
 
