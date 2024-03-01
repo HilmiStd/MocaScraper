@@ -28,14 +28,12 @@ def user_name(session):
             cookies = {
                 'MoodleSession': session
             }
-            response = requests.get('https://moca.unimma.ac.id/admin/index.php', cookies=cookies, verify=False)
+            response = requests.get('https://moca.unimma.ac.id/user/profile.php', cookies=cookies, verify=False)
             soup = BeautifulSoup(response.text, 'html.parser')
-
-            login_info = soup.find('div', class_='logininfo')
-            if login_info:
-                return login_info.a.text
-        except AttributeError:
-            return False
+            title_tag = soup.title
+            title_text = title_tag.text
+            judul_belakang = title_text.split(':')[0].strip()
+            return judul_belakang
         except:
             pass
 
