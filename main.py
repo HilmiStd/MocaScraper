@@ -106,6 +106,12 @@ if __name__ == "__main__":
         with open(config_file_path, 'r') as file:
             json_data = file.read()
         data = json.loads(json_data)
+
+        try:
+            telegram = data['telegram']
+        except:
+            telegram = None
+
         username = data['username']
         password = data['password']
         data = data['id_courses']
@@ -116,11 +122,13 @@ if __name__ == "__main__":
     if args.id_courses:
         try:
             session = login.cookies(username, password)
-            presence.presence(args.id_courses, session)
+            if telegram:
+                presence.presence(args.id_courses, session, telegram=telegram)
+            else:
+                presence.presence(args.id_courses, session)
         except Exception as e:
             print("HilmiStd/MocaScraper:", e)
-        except:
-            pass
+
     else:
         try:
             main(username, password, data)
@@ -128,5 +136,4 @@ if __name__ == "__main__":
             os.system("cls" if os.name == "nt" else "clear")
             print("HilmiStd/MocaScraper: Script diakhiri oleh user.")
             os._exit(1)
-        except:
-            pass
+

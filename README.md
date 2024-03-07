@@ -42,3 +42,12 @@ contoh menggunakan cron dan nohup untuk menjalankan setiap hari senin jam 1 sian
 ```bash
 0 13 * * 1 nohup python main.py 15291 &
 ```
+## Setup telebot notif (BETA)
+Fitur ini hanya berfungsi untuk mode `Setup auto hit`. Untuk mengirim notifikasi ke telegram, tambahkan key telegram di `config.json` berisi value dari id bot dan id user telegram formatnya sebagai berikut:
+```bash
+  "telegram":{
+    "bot_id": "isi_id_bot_telegram",
+    "user_id": "isi_id_user_telegram"
+  }
+```
+

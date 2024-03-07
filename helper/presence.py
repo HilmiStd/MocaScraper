@@ -1,13 +1,17 @@
 import os
 import time
+import datetime
 import requests
 import urllib3
 from bs4 import BeautifulSoup
+import telebot
+from html2image import Html2Image
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
-def presence(id_course, session, event=None):
+
+def presence(id_course, session, event=None, telegram=None):
     while True:
         try:
             # ke 3
@@ -17,6 +21,7 @@ def presence(id_course, session, event=None):
             }
             response = requests.get(url, cookies=cookies, verify=False)
             soup = BeautifulSoup(response.text, 'html.parser')
+            heading = soup.find('h1', class_='h2').text
             link_elem = soup.find('a', href=lambda
                 href: href and 'https://moca.unimma.ac.id/mod/attendance/view.php' in href)
             href_value = link_elem['href']
@@ -27,6 +32,10 @@ def presence(id_course, session, event=None):
                 event.set()
                 time.sleep(0.5)
                 os.system("cls" if os.name == "nt" else "clear")
+            if telegram:
+                bot = telebot.TeleBot(token=telegram['bot_id'], parse_mode=None)
+                bot.send_message(chat_id=telegram['user_id'],
+                                 text=f"[{datetime.datetime.now().strftime('%Y-%m-%d %H-%M-%S')}] Belum enroll di course {url} tuan.")
             print("\033[1;33m" + "HilmiStd/MocaScraper:", f"Belum enroll course ini, kunjungi {url} untuk enroll.",
                   "\033[0m")
             return
@@ -49,6 +58,10 @@ def presence(id_course, session, event=None):
                 event.set()
                 time.sleep(0.5)
                 os.system("cls" if os.name == "nt" else "clear")
+            if telegram:
+                bot = telebot.TeleBot(token=telegram['bot_id'], parse_mode=None)
+                bot.send_message(chat_id=telegram['user_id'],
+                                 text=f"[{datetime.datetime.now().strftime('%Y-%m-%d %H-%M-%S')}] Belum ada presensi di course {heading} tuan.")
             print("\033[1;33m" + "HilmiStd/MocaScraper:", f"Belum ada presensi di course ini.",
                   "\033[0m")
             return
@@ -100,6 +113,17 @@ def presence(id_course, session, event=None):
                 event.set()
                 time.sleep(0.5)
                 os.system("cls" if os.name == "nt" else "clear")
+            if telegram:
+                response = requests.get(href_value, cookies=cookies, verify=False)
+                fileName = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+                html2Image = Html2Image()
+                html2Image.screenshot(html_str=response.text, save_as=f'{fileName}.png')
+                bot = telebot.TeleBot(token=telegram['bot_id'], parse_mode=None)
+                image = open(f"{fileName}.png", 'rb')
+                bot.send_photo(chat_id=telegram['user_id'], photo=image,
+                               caption=f"[{datetime.datetime.now().strftime('%Y-%m-%d %H-%M-%S')}] Berhasil presensi di course {heading} tuan.")
+                image.close()
+                os.remove(f"{fileName}.png")
             print(f"HilmiStd/MocaScraper: Berhasil presensi, silahkan cek di {href_value}.")
             return
         except AttributeError:
@@ -107,6 +131,10 @@ def presence(id_course, session, event=None):
                 event.set()
                 time.sleep(0.5)
                 os.system("cls" if os.name == "nt" else "clear")
+            if telegram:
+                bot = telebot.TeleBot(token=telegram['bot_id'], parse_mode=None)
+                bot.send_message(chat_id=telegram['user_id'],
+                                 text=f"[{datetime.datetime.now().strftime('%Y-%m-%d %H-%M-%S')}] Gagal presensi di course {heading} tuan.")
             print("\033[1;33m" + "HilmiStd/MocaScraper: Pilihan Present/Hadir dan Late/Terlambat tidak ditemukan.",
                   "\033[0m")
             return
