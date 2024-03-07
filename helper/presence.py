@@ -5,7 +5,6 @@ import requests
 import urllib3
 from bs4 import BeautifulSoup
 import telebot
-from html2image import Html2Image
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -115,15 +114,18 @@ def presence(id_course, session, event=None, telegram=None):
                 os.system("cls" if os.name == "nt" else "clear")
             if telegram:
                 response = requests.get(href_value, cookies=cookies, verify=False)
-                fileName = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-                html2Image = Html2Image()
-                html2Image.screenshot(html_str=response.text, save_as=f'{fileName}.png')
+                file_name = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+
+                document = open(f"{file_name}.html", "wb")
+                document.write(response.content)
+                document.close()
+
+                document = open(f"{file_name}.html")
                 bot = telebot.TeleBot(token=telegram['bot_id'], parse_mode=None)
-                image = open(f"{fileName}.png", 'rb')
-                bot.send_photo(chat_id=telegram['user_id'], photo=image,
-                               caption=f"[{datetime.datetime.now().strftime('%Y-%m-%d %H-%M-%S')}] Berhasil presensi di course {heading} tuan.")
-                image.close()
-                os.remove(f"{fileName}.png")
+                bot.send_document(chat_id=telegram['user_id'], document=document, captions=f"[{datetime.datetime.now().strftime('%Y-%m-%d %H-%M-%S')}] Berhasil presensi di course {heading} tuan.")
+                document.close()
+
+                os.remove(f"{file_name}.html")
             print(f"HilmiStd/MocaScraper: Berhasil presensi, silahkan cek di {href_value}.")
             return
         except AttributeError:
