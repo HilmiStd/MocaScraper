@@ -113,7 +113,12 @@ def presence(id_course, session, event=None, telegram=None):
                 time.sleep(0.5)
                 os.system("cls" if os.name == "nt" else "clear")
             if telegram:
-                response = requests.get(href_value, cookies=cookies, verify=False)
+                while True:
+                    try:
+                        response = requests.get(href_value, cookies=cookies, verify=False)
+                        break
+                    except:
+                        pass
                 file_name = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 
                 document = open(f"{file_name}.html", "wb")
@@ -122,7 +127,7 @@ def presence(id_course, session, event=None, telegram=None):
 
                 document = open(f"{file_name}.html")
                 bot = telebot.TeleBot(token=telegram['bot_id'], parse_mode=None)
-                bot.send_document(chat_id=telegram['user_id'], document=document, captions=f"[{datetime.datetime.now().strftime('%Y-%m-%d %H-%M-%S')}] Berhasil presensi di course {heading} tuan.")
+                bot.send_document(chat_id=telegram['user_id'], document=document, caption=f"[{datetime.datetime.now().strftime('%Y-%m-%d %H-%M-%S')}] Berhasil presensi di course {heading} tuan.")
                 document.close()
 
                 os.remove(f"{file_name}.html")
